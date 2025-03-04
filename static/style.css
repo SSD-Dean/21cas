@@ -7,8 +7,8 @@ body {
 
 .game-container {
   width: 320px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 20px auto;
+  padding: 10px;
   background-color: #fff;
   text-align: center;
   border-radius: 10px;
@@ -16,14 +16,25 @@ body {
 }
 
 .money {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 20px;
+}
+
+.dealer-container,
+.player-container {
+  margin-bottom: 20px;
+}
+
+.dealer-container h2,
+.player-container h2 {
+  margin-bottom: 5px;
 }
 
 .cards-container {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .card {
@@ -49,7 +60,7 @@ body {
 }
 
 .message {
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 18px;
   min-height: 24px;
 }
