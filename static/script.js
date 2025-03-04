@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       value + "c.png"
     ];
     const randomIndex = Math.floor(Math.random() * variants.length);
-    return "cards/" + variants[randomIndex];
+    return "./cards/" + variants[randomIndex];
   }
 
   // Инициализация игры: генерируются 3 карты со значениями от 1 до 11.
