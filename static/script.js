@@ -26,15 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Для каждой карты доступны 4 варианта: базовый вариант (например, "11.png")
   // и три дополнительных (например, "11a.png", "11b.png", "11c.png").
   function getCardImage(value) {
-    const variants = [
-      value + ".png",
-      value + "a.png",
-      value + "b.png",
-      value + "c.png"
-    ];
-    const randomIndex = Math.floor(Math.random() * variants.length);
-    return ".cards/" + variants[randomIndex];
-  }
+  const variants = [
+    value + ".png",
+    value + "a.png",
+    value + "b.png",
+    value + "c.png"
+  ];
+  const randomIndex = Math.floor(Math.random() * variants.length);
+  return "static/cards/" + variants[randomIndex];
+}
 
   // Инициализация игры: генерируются 3 карты со значениями от 1 до 11.
   function initGame() {
