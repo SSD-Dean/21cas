@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Функция для выбора изображения карты по её значению.
   // Для каждой карты доступны 4 варианта: базовый вариант (например, "11.png")
-  // и 3 дополнительных (например, "11a.png", "11b.png", "11c.png").
+  // и три дополнительных (например, "11a.png", "11b.png", "11c.png").
   function getCardImage(value) {
     const variants = [
       value + ".png",
