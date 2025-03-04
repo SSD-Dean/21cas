@@ -25,21 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Функция для выбора изображения карты по её значению.
   // Для каждой карты доступны 4 варианта: базовый (например, "11.png") и три варианта (например, "11a.png", "11b.png", "11c.png").
   function getCardImage(value) {
-    const variants = [
-      value + ".png",
-      value + "a.png",
-      value + "b.png",
-      value + "c.png"
-    ];
-    const randomIndex = Math.floor(Math.random() * variants.length);
-    return "static/cards/" + variants[randomIndex];
-  }
-
-  // Функция для получения изображения обратной стороны карты.
-  function getBackImage() {
-    return "static/cards/back.png";
-  }
-
+  const variants = [
+    value + ".png",
+    value + "a.png",
+    value + "b.png",
+    value + "c.png"
+  ];
+  const randomIndex = Math.floor(Math.random() * variants.length);
+  return "static/cards/" + variants[randomIndex];
+}
   // Инициализация игры: генерируются 3 карты со значениями от 1 до 11 и задаётся обратная сторона карт.
   function initGame() {
     cards = [];
