@@ -1,18 +1,19 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  background: url('./static/images/green-felt.jpg') no-repeat center center fixed;
+  background-size: cover;
   margin: 0;
   padding: 0;
 }
 
 .game-container {
   width: 320px;
-  margin: 20px auto;
-  padding: 10px;
-  background-color: #fff;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: rgba(255,255,255,0.9); /* полупрозрачный фон для контента */
   text-align: center;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
 .money {
