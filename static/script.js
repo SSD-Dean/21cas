@@ -135,28 +135,33 @@ playerCards.push(Math.floor(Math.random() * 10) + 2);
   }
 
   // Завершение игры: открываются оставшиеся карты дилера, считается сумма дилера и определяется результат
-  function endGame() {
-    gameOver = true;
-    revealRemainingDealerCards();
-    const dealerScore = dealerCards.reduce((sum, card) => sum + card, 0);
-    let result = '';
-    if (playerScore > 21) {
-      result = `Перебор! Ваш счет: ${playerScore}. Вы проиграли.`;
-      playerMoney -= bet;
-    } else if (playerScore === dealerScore) {
-      result = `Ничья! Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
-    } else if (playerScore > dealerScore || dealerScore > 21) {
-      result = `Вы выиграли! Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
-      playerMoney += bet;
-    } else {
-      result = `Вы проиграли. Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
-      playerMoney -= bet;
-    }
-    messageDisplay.textContent = result;
-    newGameBtn.style.display = 'block';
-    updateUI();
+function endGame() {
+  gameOver = true;
+  revealRemainingDealerCards();
+  let dealerScore = dealerCards.reduce((sum, card) => sum + card, 0);
+  
+  // Если баланс игрока близок к 0 (например, ≤ 20), уменьшаем счет дилера на бонус (3 очка)
+  if (playerMoney <= 20) {
+    dealerScore = Math.max(dealerScore - 3, 0);
   }
-
+  
+  let result = '';
+  if (playerScore > 21) {
+    result = `Перебор! Ваш счет: ${playerScore}. Вы проиграли.`;
+    playerMoney -= bet;
+  } else if (playerScore === dealerScore) {
+    result = `Ничья! Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
+  } else if (playerScore > dealerScore || dealerScore > 21) {
+    result = `Вы выиграли! Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
+    playerMoney += bet;
+  } else {
+    result = `Вы проиграли. Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
+    playerMoney -= bet;
+  }
+  messageDisplay.textContent = result;
+  newGameBtn.style.display = 'block';
+  updateUI();
+}
   // Обработчики кнопок игрока
 
   // "Вытащить": открывает следующую карту игрока (и синхронно соответствующую карту дилера)
