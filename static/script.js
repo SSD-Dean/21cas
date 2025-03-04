@@ -11,30 +11,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('card-2')
   ];
 
-  // Изначально деньги игрока – 100, ставка – 10
+  // Исходные данные
   let playerMoney = 100;
   const bet = 10;
 
-  // Переменные игры
   let cards = [];
-  let currentCardIndex = -1; // начинаем с -1, чтобы при первом действии открыть первую карту (индекс 0)
+  let currentCardIndex = -1; // Начинаем с -1, чтобы при первом действии открыть карту с индексом 0
   let playerScore = 0;
-  let bonusMultiplier = 1; // по умолчанию 1, при выборе "Вытащить все" становится 2
+  let bonusMultiplier = 1;
   let gameOver = false;
 
-  // Функция для выбора изображения карты по её значению.
-  // Для каждой карты доступны 4 варианта: базовый (например, "11.png") и три варианта (например, "11a.png", "11b.png", "11c.png").
+  // Путь к изображению задней стороны (back) карточки
+  const backImagePath = "static/cards/back.png";
+
+  // Функция возвращает путь к изображению карты (с рандомизацией вариаций)
   function getCardImage(value) {
-  const variants = [
-    value + ".png",
-    value + "a.png",
-    value + "b.png",
-    value + "c.png"
-  ];
-  const randomIndex = Math.floor(Math.random() * variants.length);
-  return "static/cards/" + variants[randomIndex];
-}
-  // Инициализация игры: генерируются 3 карты со значениями от 1 до 11 и задаётся обратная сторона карт.
+    const variants = [
+      value + ".png",
+      value + "a.png",
+      value + "b.png",
+      value + "c.png"
+    ];
+    const randomIndex = Math.floor(Math.random() * variants.length);
+    return "static/cards/" + variants[randomIndex];
+  }
+
+  // Инициализация игры: создаются 3 карты с рандомными значениями от 1 до 11 и все карты получают заднюю сторону
   function initGame() {
     cards = [];
     for (let i = 0; i < 3; i++) {
@@ -46,20 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
     gameOver = false;
     messageDisplay.textContent = '';
 
-    // Для каждого элемента-карты находим вложенный <img> и устанавливаем ему изображение обратной стороны.
+    // Для каждого элемента-карты находим вложенный <img> и задаем ему изображение back
     cardElements.forEach((cardEl) => {
       const img = cardEl.querySelector('img');
       if (img) {
-        img.src = getBackImage();
+        img.src = backImagePath;
       } else {
-        cardEl.innerHTML = `<img src="${getBackImage()}" alt="card">`;
+        cardEl.innerHTML = `<img src="${backImagePath}" alt="card">`;
       }
     });
 
     updateUI();
   }
 
-  // Обновление интерфейса
+  // Обновление интерфейса: обновляются деньги и состояние кнопок
   function updateUI() {
     moneyDisplay.textContent = playerMoney;
     if (gameOver) {
@@ -69,12 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       drawBtn.disabled = false;
       passBtn.disabled = false;
-      // Если игрок уже открыл вторую карту (индекс 1), кнопка "Вытащить все" недоступна
+      // Если игрок уже открыл вторую карту (индекс 1 и выше), кнопка "Вытащить все" становится недоступной
       drawAllBtn.disabled = currentCardIndex >= 1;
     }
   }
 
-  // Функция для открытия следующей карты: меняем src вложенного <img> на изображение карты.
+  // Открытие следующей карты: меняем src вложенного <img> на изображение лица карты
   function revealNextCard() {
     if (currentCardIndex < cards.length - 1) {
       currentCardIndex++;
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Завершение игры: генерируется счет дилера (от 17 до 21) и производится сравнение результатов.
+  // Завершение игры: генерируем счет дилера и сравниваем с очками игрока
   function endGame() {
     gameOver = true;
     let dealerScore = Math.floor(Math.random() * 5) + 17;
@@ -110,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
   }
 
-  // Обработчик кнопки "Вытащить" – открывает одну следующую карту.
+  // Обработчики кнопок
   drawBtn.addEventListener('click', () => {
     if (!gameOver && currentCardIndex < cards.length - 1) {
       revealNextCard();
@@ -124,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
   });
 
-  // Обработчик кнопки "Вытащить все" – открывает все оставшиеся карты и устанавливает бонус (2×).
   drawAllBtn.addEventListener('click', () => {
     if (!gameOver) {
       bonusMultiplier = 2;
@@ -136,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
   });
 
-  // Обработчик кнопки "Пасовать" – завершает игру и сравнивает результат с дилером.
   passBtn.addEventListener('click', () => {
     if (!gameOver) {
       endGame();
@@ -144,5 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
   });
 
-  // Обработчик кнопки "Новая игра"
-  newGameBtn.a
+  newGameBtn.addEventListener('click', () => {
+    newGameBtn.style.display = 'none';
+    drawBtn.disabled = false;
+    drawAllBtn.disabled = false;
+    passBtn.disabled = false;
+    initGame();
+  });
+
+  // Запуск игры
+  initGame();
+});
