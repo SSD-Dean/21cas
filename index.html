@@ -9,18 +9,39 @@
   <div class="game-container">
     <h1>Игра 21</h1>
     <div class="money">Деньги: <span id="money">100</span></div>
-    <div class="cards-container">
-      <!-- Все карты изначально закрыты (лицевая сторона назад) -->
-      <div class="card" id="card-0">
-        <img src="./static/cards/back.png" alt="card">
-      </div>
-      <div class="card" id="card-1">
-        <img src="./static/cards/back.png" alt="card">
-      </div>
-      <div class="card" id="card-2">
-        <img src="./static/cards/back.png" alt="card">
+    
+    <!-- Секция дилера -->
+    <div class="dealer-container">
+      <h2>Дилер</h2>
+      <div class="cards-container" id="dealer-cards">
+        <div class="card" id="dealer-card-0">
+          <img src="./static/cards/back.png" alt="card">
+        </div>
+        <div class="card" id="dealer-card-1">
+          <img src="./static/cards/back.png" alt="card">
+        </div>
+        <div class="card" id="dealer-card-2">
+          <img src="./static/cards/back.png" alt="card">
+        </div>
       </div>
     </div>
+    
+    <!-- Секция игрока -->
+    <div class="player-container">
+      <h2>Игрок</h2>
+      <div class="cards-container" id="player-cards">
+        <div class="card" id="player-card-0">
+          <img src="./static/cards/back.png" alt="card">
+        </div>
+        <div class="card" id="player-card-1">
+          <img src="./static/cards/back.png" alt="card">
+        </div>
+        <div class="card" id="player-card-2">
+          <img src="./static/cards/back.png" alt="card">
+        </div>
+      </div>
+    </div>
+    
     <div class="buttons">
       <button id="drawBtn">Вытащить</button>
       <button id="drawAllBtn">Вытащить все</button>
