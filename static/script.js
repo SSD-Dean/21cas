@@ -6,27 +6,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const drawBtn = document.getElementById('drawBtn');
   const drawAllBtn = document.getElementById('drawAllBtn');
   const passBtn = document.getElementById('passBtn');
-  
-  // Контейнеры для карт дилера и игрока (из index.html)
+
+  // Контейнеры для карт дилера и игрока
   const dealerCardsContainer = document.getElementById('dealer-cards');
   const playerCardsContainer = document.getElementById('player-cards');
-  
+
   // Исходные данные
   let playerMoney = 100;
   const bet = 10;
-  
+
   // Массивы карт и переменные игры
   let dealerCards = [];
   let playerCards = [];
   let currentPlayerCardIndex = -1; // индекс последней открытой карты игрока
   let playerScore = 0;
-  let bonusMultiplier = 1;
   let gameOver = false;
-  
+
   // Путь к изображению задней стороны карточки
   const backImagePath = "./static/cards/back.png";
-  
-  // Функция, возвращающая путь к изображению карты (с рандомизацией вариаций)
+
+  // Функция возвращает путь к изображению карты с рандомизацией вариантов
   function getCardImage(value) {
     const variants = [
       value + ".png",
@@ -37,8 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const randomIndex = Math.floor(Math.random() * variants.length);
     return "./static/cards/" + variants[randomIndex];
   }
-  
-  // Функция для создания элемента карточки (div с img)
+
+  // Создание элемента карточки (div с вложенным img)
   function createCardElement(imgSrc) {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'card';
@@ -48,8 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cardDiv.appendChild(img);
     return cardDiv;
   }
-  
-  // Инициализация игры: генерируются случайные карты для дилера и игрока
+
+  // Инициализация игры: генерируются случайные карты дилера и игрока.
+  // Дилер: первая карта открыта, остальные – задняя сторона.
+  // Игрок: все карты закрыты.
   function initGame() {
     // Генерируем по 3 случайных числа (от 1 до 11)
     dealerCards = [];
@@ -60,13 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     currentPlayerCardIndex = -1;
     playerScore = 0;
-    bonusMultiplier = 1;
     gameOver = false;
     messageDisplay.textContent = '';
     newGameBtn.style.display = 'none';
-    
-    // Создаем карточки дилера:
-    // Первая карта открыта, остальные скрыты (back)
+
+    // Создаем карты дилера: первая открыта, остальные – задняя сторона
     dealerCardsContainer.innerHTML = '';
     for (let i = 0; i < dealerCards.length; i++) {
       if (i === 0) {
@@ -75,17 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
         dealerCardsContainer.appendChild(createCardElement(backImagePath));
       }
     }
-    
-    // Создаем карточки игрока: все скрыты
+
+    // Создаем карты игрока: все закрыты (задняя сторона)
     playerCardsContainer.innerHTML = '';
     for (let i = 0; i < playerCards.length; i++) {
       playerCardsContainer.appendChild(createCardElement(backImagePath));
     }
-    
+
     updateUI();
   }
-  
-  // Обновление интерфейса (деньги и состояние кнопок)
+
+  // Обновление интерфейса: обновляются деньги и состояние кнопок
   function updateUI() {
     moneyDisplay.textContent = playerMoney;
     if (gameOver) {
@@ -95,99 +94,91 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       drawBtn.disabled = false;
       passBtn.disabled = false;
-      // Если игрок уже открыл более одной карты, кнопка "Вытащить все" становится недоступной
-      drawAllBtn.disabled = currentPlayerCardIndex >= 1;
+      // Отключаем "Вытащить все", если игрок уже открыл хотя бы одну карту
+      drawAllBtn.disabled = currentPlayerCardIndex >= 0;
     }
   }
-  
+
   // Функция открытия следующей карты игрока
   function revealNextPlayerCard() {
     if (currentPlayerCardIndex < playerCards.length - 1) {
       currentPlayerCardIndex++;
       playerScore += playerCards[currentPlayerCardIndex];
+      // Обновляем изображение для открытой карты игрока
       const cardDiv = playerCardsContainer.children[currentPlayerCardIndex];
       const img = cardDiv.querySelector('img');
       if (img) {
         img.src = getCardImage(playerCards[currentPlayerCardIndex]);
       }
-      // Синхронно открываем соответствующую скрытую карту дилера (если она есть)
-      syncDealerCard();
-    }
-  }
-  
-  // Функция, которая открывает следующую скрытую карту дилера,
-  // соответствующую количеству открытых карт игрока.
-  // Например, если игрок открыл 1 карту (currentPlayerCardIndex == 0),
-  // открываем дилерскую карту с индексом 1.
-  function syncDealerCard() {
-    const dealerIndex = currentPlayerCardIndex + 1; // первая карта дилера уже открыта
-    if (dealerIndex < dealerCards.length) {
-      const cardDiv = dealerCardsContainer.children[dealerIndex];
-      const img = cardDiv.querySelector('img');
-      if (img) {
-        img.src = getCardImage(dealerCards[dealerIndex]);
+      // Синхронно открываем соответствующую скрытую карту дилера:
+      // Если игрок открыл 1-ю карту, открываем дилерскую карту с индексом 1;
+      // Если игрок открыл 2-ю карту, открываем дилерскую карту с индексом 2.
+      const dealerIndex = currentPlayerCardIndex + 1;
+      if (dealerIndex < dealerCards.length) {
+        const dealerCardDiv = dealerCardsContainer.children[dealerIndex];
+        const dealerImg = dealerCardDiv.querySelector('img');
+        if (dealerImg) {
+          dealerImg.src = getCardImage(dealerCards[dealerIndex]);
+        }
       }
     }
   }
-  
-  // Если игра завершается, открываем все оставшиеся скрытые карты дилера
+
+  // Функция открытия всех оставшихся скрытых карт дилера (вызывается при завершении игры)
   function revealRemainingDealerCards() {
     for (let i = 0; i < dealerCards.length; i++) {
       const cardDiv = dealerCardsContainer.children[i];
       const img = cardDiv.querySelector('img');
-      if (img && (img.src.indexOf("back.png") !== -1)) {
+      // Если картинка ещё задней стороны, открываем её
+      if (img && img.src.indexOf("back.png") !== -1) {
         img.src = getCardImage(dealerCards[i]);
       }
     }
   }
-  
-  // Завершение игры: открываются оставшиеся карты дилера, считается сумма дилера и сравнивается с игроком
+
+  // Завершение игры: открываются оставшиеся карты дилера, считается сумма дилера и определяется результат
   function endGame() {
     gameOver = true;
-    // Открываем все оставшиеся карты дилера
     revealRemainingDealerCards();
-    
-    // Сумма очков дилера
     const dealerScore = dealerCards.reduce((sum, card) => sum + card, 0);
     let result = '';
-    
     if (playerScore > 21) {
       result = `Перебор! Ваш счет: ${playerScore}. Вы проиграли.`;
-      playerMoney -= bet * bonusMultiplier;
+      playerMoney -= bet;
     } else if (playerScore === dealerScore) {
       result = `Ничья! Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
     } else if (playerScore > dealerScore || dealerScore > 21) {
       result = `Вы выиграли! Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
-      playerMoney += bet * bonusMultiplier;
+      playerMoney += bet;
     } else {
       result = `Вы проиграли. Ваш счет: ${playerScore}, счет дилера: ${dealerScore}.`;
-      playerMoney -= bet * bonusMultiplier;
+      playerMoney -= bet;
     }
-    
     messageDisplay.textContent = result;
     newGameBtn.style.display = 'block';
     updateUI();
   }
-  
-  // Обработчик кнопки "Вытащить" — открывает одну карту игрока (и синхронно следующую скрытую карту дилера)
+
+  // Обработчики кнопок игрока
+
+  // "Вытащить": открывает следующую карту игрока (и синхронно соответствующую карту дилера)
   drawBtn.addEventListener('click', () => {
     if (!gameOver && currentPlayerCardIndex < playerCards.length - 1) {
       revealNextPlayerCard();
       if (playerScore > 21) {
         endGame();
       }
-      // Если игрок открыл все карты, завершаем игру
+      // Если игрок открыл все свои карты, завершаем игру
       if (currentPlayerCardIndex === playerCards.length - 1) {
         endGame();
       }
     }
     updateUI();
   });
-  
-  // Обработчик кнопки "Вытащить все" — открывает все оставшиеся карты игрока и синхронно дилера, затем завершает игру с бонусом 2×
+
+  // "Вытащить все": открывает все оставшиеся карты игрока (и синхронно дилера) сразу
   drawAllBtn.addEventListener('click', () => {
     if (!gameOver) {
-      bonusMultiplier = 2;
       while (currentPlayerCardIndex < playerCards.length - 1) {
         revealNextPlayerCard();
       }
@@ -195,20 +186,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateUI();
   });
-  
-  // Обработчик кнопки "Пасовать" — завершает ход игрока и открывает оставшиеся карты дилера
+
+  // "Пасовать": завершает ход игрока и открывает оставшиеся карты дилера
   passBtn.addEventListener('click', () => {
     if (!gameOver) {
       endGame();
     }
     updateUI();
   });
-  
-  // Обработчик кнопки "Новая игра"
+
   newGameBtn.addEventListener('click', () => {
     initGame();
   });
-  
+
   // Запуск игры
   initGame();
 });
