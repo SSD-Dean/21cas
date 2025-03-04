@@ -52,12 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Дилер: первая карта открыта, остальные – задняя сторона.
   // Игрок: все карты закрыты.
   function initGame() {
-    // Генерируем по 3 случайных числа (от 1 до 11)
+    // Генерируем по 3 случайных числа (от 2 до 11, исключая 1)
     dealerCards = [];
     playerCards = [];
     for (let i = 0; i < 3; i++) {
-      dealerCards.push(Math.floor(Math.random() * 11) + 1);
-      playerCards.push(Math.floor(Math.random() * 11) + 1);
+      dealerCards.push(Math.floor(Math.random() * 10) + 2);
+      playerCards.push(Math.floor(Math.random() * 10) + 2);
     }
     currentPlayerCardIndex = -1;
     playerScore = 0;
@@ -104,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentPlayerCardIndex < playerCards.length - 1) {
       currentPlayerCardIndex++;
       playerScore += playerCards[currentPlayerCardIndex];
-      // Обновляем изображение для открытой карты игрока
       const cardDiv = playerCardsContainer.children[currentPlayerCardIndex];
       const img = cardDiv.querySelector('img');
       if (img) {
@@ -129,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < dealerCards.length; i++) {
       const cardDiv = dealerCardsContainer.children[i];
       const img = cardDiv.querySelector('img');
-      // Если картинка ещё задней стороны, открываем её
       if (img && img.src.indexOf("back.png") !== -1) {
         img.src = getCardImage(dealerCards[i]);
       }
