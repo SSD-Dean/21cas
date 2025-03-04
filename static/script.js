@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     playerCards = [];
     for (let i = 0; i < 3; i++) {
       dealerCards.push(Math.floor(Math.random() * 10) + 2);
-      playerCards.push(Math.floor(Math.random() * 10) + 2);
+playerCards.push(Math.floor(Math.random() * 10) + 2);
     }
     currentPlayerCardIndex = -1;
     playerScore = 0;
